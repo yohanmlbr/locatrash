@@ -1,58 +1,47 @@
 package com.codev.locatrash.service;
 
 import com.codev.locatrash.entity.Poubelle;
+import com.codev.locatrash.entity.request.LocationIQAPIResponse;
 import com.codev.locatrash.entity.request.StatsPoubelleRequest;
+import com.codev.locatrash.proxies.LocationIQClient;
+import com.codev.locatrash.proxies.PoubelleClient;
 import com.codev.locatrash.repository.PoubelleRepository;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Collection;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 
+@Service
+@AllArgsConstructor
 public class PoubelleService {
 
     private PoubelleRepository poubelleRepository;
-
-    public PoubelleService(PoubelleRepository poubelleRepository){
-        this.poubelleRepository=poubelleRepository;
-    }
+    private PoubelleClient poubelleClient;
+    private LocationIQClient locationIQClient;
 
     public List<Poubelle> getPoubelles(){
         return poubelleRepository.findAll();
     }
 
-    public void updatePoubelles(){
-        List<Poubelle> poubelles=getPoubelles();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            JsonNode content= mapper.readTree(new File("D:\\Documents\\#PolyLyon\\Informatique\\5A\\CODEV\\all_poubelles.json"));
-            JsonNode values = content.path("values");
-            for(JsonNode poubelle : values){
-                Poubelle p = mapper.readValue(poubelle.toString(),Poubelle.class);
-                if(isPoubelleNew(p,poubelles)) {
-                    poubelleRepository.save(p);
-                }
+    public List<Poubelle> getTrashesFromAPI(){
+        return poubelleClient.getAllPoubelles().getValues();
+    }
+
+    public void updateTrashes(){
+        List<Poubelle> trashes=getTrashesFromAPI();
+        for(Poubelle t : trashes){
+            try {
+                Thread.sleep(1000);
+                LocationIQAPIResponse LatLong=locationIQClient.getLatLongTrash(getCompleteTrashAddress(t)).get(0);
+                t.setLatitude(LatLong.getLat());
+                t.setLongitude(LatLong.getLon());
+                poubelleRepository.save(t);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-    public boolean isPoubelleNew(Poubelle poubelle, List<Poubelle> poubelles){
-        for(Poubelle p : poubelles){
-            if(p.getIdentifiant().equals(poubelle.getIdentifiant())){
-                System.out.println("Poubelle "+poubelle.getIdentifiant()+" already exist");
-                return false;
-            }
-        }
-        return true;
-    }
 
     public StatsPoubelleRequest statsPoubelles(){
         List<Poubelle> poubelles = poubelleRepository.findAll();
@@ -68,5 +57,20 @@ public class PoubelleService {
             poubellesBySector.put("TOTAL",poubellesBySector.get("TOTAL")+1);
         }
         return new StatsPoubelleRequest(poubellesBySector);
+    }
+
+    public String getCompleteTrashAddress(Poubelle p){
+        String address="";
+        if(!(p.getNumerodansvoie()==null))
+            address+=p.getNumerodansvoie()+" ";
+        if(!(p.getVoie()==null))
+            address+=p.getVoie()+" ";
+        if(!(p.getCommune()==null)) {
+            address += p.getCommune() + " ";
+            if (!(p.getCommune().contains("LYON")))
+                address += "Lyon ";
+        }
+        address+="France";
+        return address;
     }
 }

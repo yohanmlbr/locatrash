@@ -11,10 +11,6 @@ import java.util.Date;
 public class Poubelle {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private long id;
-
     @Basic
     @Column(name = "identifiant",unique = true, nullable = false, length = 50)
     private String identifiant;
@@ -86,13 +82,13 @@ public class Poubelle {
     @Column(name = "datemodifalpha")
     private Date datemodifalpha;
 
-    public long getId() {
-        return id;
-    }
+    @Basic
+    @Column(name = "latitude", length = 50)
+    private String latitude;
 
-    public void setId(long id) {
-        this.id = id;
-    }
+    @Basic
+    @Column(name = "longitude", length = 50)
+    private String longitude;
 
     public String getIdentifiant() {
         return identifiant;
@@ -228,5 +224,21 @@ public class Poubelle {
 
     public void setDatemodifalpha(Date datemodifalpha) {
         this.datemodifalpha = datemodifalpha;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }
