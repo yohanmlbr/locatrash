@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "poubelle", schema = "locatrash", catalog = "")
-public class Poubelle {
+public class Trash {
 
     @Id
     @Basic
