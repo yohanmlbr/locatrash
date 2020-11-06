@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name="locationiqclient", url = "https://us1.locationiq.com/v1/search.php?key=pk.85fef269738343f2ecae0077b6ccd58f&format=json")
+@FeignClient(name="locationiqclient", url = "https://us1.locationiq.com/v1")
 public interface LocationIQClient {
-    @RequestMapping(method = RequestMethod.GET)
+    String pk="pk.85fef269738343f2ecae0077b6ccd58f";
+
+    @RequestMapping(method = RequestMethod.GET, value = "/search.php?key="+pk+"&format=json")
     List<LocationIQAPIResponse> getLatLongTrash(@RequestParam("q") String address);
 }
