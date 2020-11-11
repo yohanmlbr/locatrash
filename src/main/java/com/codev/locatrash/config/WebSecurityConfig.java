@@ -61,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // On n'utilise pas de  CSRF (cross-site request forgery) pour cet exemple
         httpSecurity.csrf().disable()
                 // dont authenticate this particular request
-                .authorizeRequests().antMatchers("/auth/login").permitAll().
+                .authorizeRequests().antMatchers("/auth/login","/user/add").permitAll().
                 // toutes les requêtes doivent être authentifiées avec le jeton
                         anyRequest().authenticated().and().
                 //assurez-vous d'utiliser une session sans état
