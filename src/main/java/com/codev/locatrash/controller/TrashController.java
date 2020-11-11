@@ -35,7 +35,7 @@ public class TrashController {
         ts.updateTrashes();
     }
 
-    @GetMapping("/stats")
+    @GetMapping("/countByCommune")
     public HashMap<String,Long> countTrashesByCommune(){
         return ts.countTrashesByCommune();
     }

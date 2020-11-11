@@ -3,6 +3,7 @@ package com.codev.locatrash.service;
 import com.codev.locatrash.entity.User;
 import com.codev.locatrash.entity.request.AddUserRequest;
 import com.codev.locatrash.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
@@ -21,7 +22,8 @@ public class UserService {
     public void addUser(AddUserRequest addUserRequest){
         User user = new User();
         user.setEmail(addUserRequest.getEmail());
-        user.setPassword(addUserRequest.getPassword());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(addUserRequest.getPassword()));
         user.setName(addUserRequest.getName());
         user.setSurname(addUserRequest.getSurname());
         userRepository.save(user);

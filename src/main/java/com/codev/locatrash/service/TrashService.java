@@ -50,10 +50,13 @@ public class TrashService {
 
     public HashMap<String,Long> countTrashesByCommune(){
         HashMap<String,Long> hm=new HashMap<>();
+        long total=0;
         for(Object[] obj : trashRepository.countTrashesByCommune()){
-            System.out.println(obj[0].toString()+" "+obj[1].toString());
+            //System.out.println(obj[0].toString()+" "+obj[1].toString());
             hm.put((String)obj[0],(Long)obj[1]);
+            total+=(Long)obj[1];
         }
+        hm.put("TOTAL",total);
         return hm;
     }
 
