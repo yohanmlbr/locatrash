@@ -47,6 +47,7 @@ public class JwtAuthenticationController {
             throws Exception {
         try {
             // On contrôle l'utilisateur
+            System.out.println("User tries to login : "+user.getEmail()+" "+user.getPassword());
             UserDetails userDetails= appelAuthentication(user.getEmail(), user.getPassword());
             // on récupère les informations
             // nouvel accès à la base de données

@@ -2,13 +2,15 @@ package com.codev.locatrash.service;
 
 import com.codev.locatrash.entity.Trash;
 import com.codev.locatrash.entity.request.LocationIQAPIResponse;
+import com.codev.locatrash.entity.request.TrashCommune;
 import com.codev.locatrash.exception.RessourceException;
 import com.codev.locatrash.proxies.LocationIQClient;
 import com.codev.locatrash.proxies.TrashClient;
 import com.codev.locatrash.repository.TrashRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,19 +50,18 @@ public class TrashService {
         }
     }
 
-    public HashMap<String,Long> countTrashesByCommune(){
-        HashMap<String,Long> hm=new HashMap<>();
-        long total=0;
+    public List<TrashCommune> countTrashesByCommune(){
+        List<TrashCommune> trashesByCommune=new ArrayList<>();
         for(Object[] obj : trashRepository.countTrashesByCommune()){
-            //System.out.println(obj[0].toString()+" "+obj[1].toString());
-            hm.put((String)obj[0],(Long)obj[1]);
-            total+=(Long)obj[1];
+           TrashCommune tc=new TrashCommune();
+           tc.setCommune((String)obj[0]);
+           tc.setTrashes((Long)obj[1]);
+           trashesByCommune.add(tc);
         }
-        hm.put("TOTAL",total);
-        return hm;
+        return trashesByCommune;
     }
 
-    public String getCompleteTrashAddress(Trash p){
+    private String getCompleteTrashAddress(Trash p){
         String address="";
         if(!(p.getNumerodansvoie()==null))
             address+=p.getNumerodansvoie()+" ";

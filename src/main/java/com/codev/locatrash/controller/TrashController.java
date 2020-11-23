@@ -1,11 +1,11 @@
 package com.codev.locatrash.controller;
 
 import com.codev.locatrash.entity.Trash;
+import com.codev.locatrash.entity.request.TrashCommune;
 import com.codev.locatrash.service.TrashService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -36,7 +36,7 @@ public class TrashController {
     }
 
     @GetMapping("/countByCommune")
-    public HashMap<String,Long> countTrashesByCommune(){
+    public List<TrashCommune> countTrashesByCommune(){
         return ts.countTrashesByCommune();
     }
 
