@@ -3,7 +3,11 @@ package com.codev.locatrash.controller;
 import java.util.Objects;
 
 import com.codev.locatrash.entity.User;
+import com.codev.locatrash.entity.request.LogInUser;
+import com.codev.locatrash.entity.request.SignUpUser;
 import com.codev.locatrash.repository.UserRepository;
+import com.codev.locatrash.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,17 +17,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.codev.locatrash.service.JwtUserDetailsService;
 import com.codev.locatrash.config.JwtTokenUtil;
 import com.codev.locatrash.entity.JwtResponse;
 
 @RequestMapping("/auth")
 @RestController
+@AllArgsConstructor
 @CrossOrigin
 public class JwtAuthenticationController {
 
@@ -31,39 +32,34 @@ public class JwtAuthenticationController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    private JwtUserDetailsService userDetailsService;
 
-    private UserRepository userRepository;
+    private UserService us;
 
-    // on initialise
-    @Autowired
-    public JwtAuthenticationController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-    // auhentification  qui va généré un jeton
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody User user)
+    @PostMapping(value = "/login")
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody LogInUser liu)
             throws Exception {
         try {
-            // On contrôle l'utilisateur
-            System.out.println("User tries to login : "+user.getEmail()+" "+user.getPassword());
-            UserDetails userDetails= appelAuthentication(user.getEmail(), user.getPassword());
-            // on récupère les informations
-            // nouvel accès à la base de données
-            //final UserDetails userDetails = userDetailsService.loadUserByUsername(unUti.getNomUtil());
-            // On génère le jeton
+            System.out.println("User tries to login : "+liu.getEmail()+" "+liu.getPassword());
+            UserDetails userDetails= appelAuthentication(liu.getEmail(), liu.getPassword());
             final String token = jwtTokenUtil.generateToken(userDetails);
-            // on retourne le jeton dans un flux json
             return ResponseEntity.ok(new JwtResponse(token));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    // Demande d'authentification à l'aide de l'objet instancié précédemment
-    // La méthode authenticate() appellera la méthode loadUserByUsername() de la classe UserDetailsServiceImpl
-    // L'objet autentication contiendra l'objet userDetails dans la propriété principal
+    @PostMapping("/signup")
+    public ResponseEntity<?> signUp(@RequestBody SignUpUser suu){
+        User u=us.addUser(suu);
+        LogInUser liu = new LogInUser(suu);
+        try {
+            return createAuthenticationToken(liu);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     private UserDetails appelAuthentication(String email, String password) throws Exception {
 
         try {
