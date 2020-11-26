@@ -1,5 +1,6 @@
 package com.codev.locatrash.service;
 
+import com.codev.locatrash.entity.Trash;
 import com.codev.locatrash.entity.User;
 import com.codev.locatrash.entity.request.SignUpUser;
 import com.codev.locatrash.repository.UserRepository;
@@ -30,5 +31,10 @@ public class UserService {
         user.setName(signUpUser.getName());
         user.setSurname(signUpUser.getSurname());
         return userRepository.save(user);
+    }
+
+    public User getUserFromEmail(String email){
+        List<User> users =  userRepository.findByEmail(email);
+        return users.isEmpty() ? null : users.get(0);
     }
 }
