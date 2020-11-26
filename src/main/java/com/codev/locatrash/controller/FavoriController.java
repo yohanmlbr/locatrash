@@ -1,6 +1,7 @@
 package com.codev.locatrash.controller;
 
 import com.codev.locatrash.entity.Favori;
+import com.codev.locatrash.entity.request.FavoriteTrash;
 import com.codev.locatrash.service.FavoriService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,11 @@ public class FavoriController {
     @GetMapping("/list/{user}")
     public List<Favori> getFavorisByUser(@PathVariable long user){
         return fs.getFavorisByUser(user);
+    }
+
+    @GetMapping("/trashes/{user}")
+    public List<FavoriteTrash> getFavoritesTrashesByUser(@PathVariable long user){
+        return fs.getFavoritesTrashesByUser(user);
     }
 
     @PostMapping("/add/{user}/{trash}")
