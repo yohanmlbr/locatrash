@@ -12,4 +12,7 @@ public interface TrashRepository extends JpaRepository<Trash, String> {
 
     @Query("SELECT t.commune,COUNT(*) FROM Trash t GROUP BY commune")
     public List<Object[]> countTrashesByCommune();
+
+    @Query(value ="SELECT *, ( acos(sin(RADIANS(latitude))*sin(RADIANS(?1))+cos(RADIANS(latitude))*cos(RADIANS(?1))*cos(RADIANS(longitude-?2)))*6371 ) AS distance FROM poubelle ORDER BY distance",nativeQuery = true)
+    List<Trash> findByLatLon(double lat, double lon);
 }

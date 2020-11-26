@@ -40,4 +40,8 @@ public class TrashController {
         return ts.countTrashesByCommune();
     }
 
+    @GetMapping("/nearest/{lat}/{lon}")
+    public String getNearestTrash(@PathVariable double lat, @PathVariable double lon){
+        return ts.getNearestTrash(lat,lon);
+    }
 }

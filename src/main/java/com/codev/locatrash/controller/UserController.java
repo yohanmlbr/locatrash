@@ -1,7 +1,7 @@
 package com.codev.locatrash.controller;
 
 import com.codev.locatrash.entity.User;
-import com.codev.locatrash.entity.request.AddUserRequest;
+import com.codev.locatrash.entity.request.SignUpUser;
 import com.codev.locatrash.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public void addUser(@RequestBody AddUserRequest addUserRequest){
-        us.addUser(addUserRequest);
+    public void addUser(@RequestBody SignUpUser signUpUser){
+        us.addUser(signUpUser);
     }
 }

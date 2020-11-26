@@ -3,7 +3,7 @@ package com.codev.locatrash.entity.request;
 import lombok.Data;
 
 @Data
-public class AddUserRequest {
+public class SignUpUser {
 
     private String email;
     private String password;

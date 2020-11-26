@@ -35,6 +35,11 @@ public class TrashService {
         );
     }
 
+    public String getNearestTrash(double lat, double lon){
+        List<Trash> trashes =  trashRepository.findByLatLon(lat,lon);
+        return trashes.isEmpty() ? null : trashes.get(0).getIdentifiant();
+    }
+
     public void updateTrashes(){
         List<Trash> trashes=getTrashesFromAPI();
         for(Trash t : trashes){
