@@ -38,7 +38,7 @@ public class JwtAuthenticationController {
             final String token = jwtTokenUtil.generateToken(userDetails);
             final User user = us.getUserFromEmail(liu.getEmail());
             final long id = user.getId();
-            final String name = user.getName();
+            final String name = user.getName()+" "+user.getSurname();
             return ResponseEntity.ok().body("{\"token\" : \"" + token + "\", \"id\" : \"" + id + "\", " + "\"name\" : \"" + name + "\"}");
         } catch (Exception e) {
             return ResponseEntity.notFound().build();

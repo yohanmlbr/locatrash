@@ -30,10 +30,11 @@ public class FavoriController {
         return fs.getFavoritesTrashesByUser(user);
     }
 
-    @PostMapping("/add/{user}/{trash}")
+    @GetMapping("/add/{user}/{trash}")
     public Favori addFavori(@PathVariable long user, @PathVariable String trash){
         return fs.addFavori(user,trash);
     }
+
     @DeleteMapping("/remove/{id}")
     public void removeFavori(@PathVariable long id){
         fs.removeFavori(id);
