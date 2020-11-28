@@ -53,11 +53,10 @@ public class FavoriService {
         return favoriRepository.save(f);
     }
 
-    public void removeFavori(long id){
-        Favori f = favoriRepository.findById(id).orElseThrow(
-                () -> new RessourceException("Favori", "id", id)
-        );
-        favoriRepository.delete(f);
+    public void removeFavori(long user, String trash){
+        List<Favori> favoris = favoriRepository.findByUserIdAndAndTrashId(user,trash);
+        Favori f = favoris.isEmpty() ? null : favoris.get(0);
+        if(f!=null)favoriRepository.delete(f);
     }
 
 }

@@ -10,4 +10,6 @@ import java.util.List;
 public interface FavoriRepository extends JpaRepository<Favori, Long> {
 
     List<Favori> findByUserId(long id);
+
+    List<Favori> findByUserIdAndAndTrashId(long user, String trash);
 }
