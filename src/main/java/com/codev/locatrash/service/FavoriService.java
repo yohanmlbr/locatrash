@@ -3,7 +3,6 @@ package com.codev.locatrash.service;
 import com.codev.locatrash.entity.Favori;
 import com.codev.locatrash.entity.Trash;
 import com.codev.locatrash.entity.request.FavoriteTrash;
-import com.codev.locatrash.exception.RessourceException;
 import com.codev.locatrash.repository.FavoriRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

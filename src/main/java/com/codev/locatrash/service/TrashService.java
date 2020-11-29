@@ -29,6 +29,10 @@ public class TrashService {
         return trashClient.getAllPoubelles().getValues();
     }
 
+    public int getTrashesCount(){
+        return getTrashes().size();
+    }
+
     public Trash getTrashById(String id){
         return trashRepository.findById(id).orElseThrow(
             () -> new RessourceException("Trash", "id", id)
@@ -44,15 +48,41 @@ public class TrashService {
         List<Trash> trashes=getTrashesFromAPI();
         for(Trash t : trashes){
             try {
-                Thread.sleep(1000);
-                LocationIQAPIResponse LatLong=locationIQClient.getLatLongTrash(getCompleteTrashAddress(t)).get(0);
-                t.setLatitude(LatLong.getLat());
-                t.setLongitude(LatLong.getLon());
-                trashRepository.save(t);
+                System.out.println("TRASH "+t.getIdentifiant()+", GID "+t.getGid());
+                if(!trashExists(t.getIdentifiant()) && !forbiddenAddress(t.getVoie())){
+                    Thread.sleep(1000);
+                    LocationIQAPIResponse LatLong=locationIQClient.getLatLongTrash(getCompleteTrashAddress(t)).get(0);
+                    t.setLatitude(LatLong.getLat());
+                    t.setLongitude(LatLong.getLon());
+                    trashRepository.save(t);
+                    System.out.println("Trash "+t.getIdentifiant()+" added!");
+                }
+                else{
+                    System.out.println("Trash "+t.getIdentifiant()+" already exists!");
+                }
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public boolean trashExists(String id){
+        try{
+            getTrashById(id);
+            return true;
+        }catch (Exception e){
+            //e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean forbiddenAddress(String voie){
+        boolean ok=false;
+        if(voie!=null && (voie.equals("Berge Clara Campoamor") || voie.equals("Berge Aletta Jacobs") || voie.equals("Berge Renata Tebaldi"))){
+            ok=true;
+        }
+        return ok;
     }
 
     public List<TrashCommune> countTrashesByCommune(){

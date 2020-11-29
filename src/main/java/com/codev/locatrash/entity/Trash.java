@@ -64,8 +64,8 @@ public class Trash {
     private String commentaire;
 
     @Basic
-    @Column(name = "gid", nullable = false, length = 20)
-    private String gid;
+    @Column(name = "gid", nullable = false)
+    private int gid;
 
     @Basic
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -194,11 +194,11 @@ public class Trash {
         this.commentaire = commentaire;
     }
 
-    public String getGid() {
+    public int getGid() {
         return gid;
     }
 
-    public void setGid(String gid) {
+    public void setGid(int gid) {
         this.gid = gid;
     }
 

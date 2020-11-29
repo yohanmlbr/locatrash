@@ -44,4 +44,14 @@ public class TrashController {
     public String getNearestTrash(@PathVariable double lat, @PathVariable double lon){
         return ts.getNearestTrash(lat,lon);
     }
+
+    @GetMapping("/exists/{id}")
+    public boolean getTrashExists(@PathVariable String id){
+        return ts.trashExists(id);
+    }
+
+    @GetMapping("/count")
+    public int getTrashesCount(){
+        return ts.getTrashesCount();
+    }
 }

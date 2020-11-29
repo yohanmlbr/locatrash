@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(name="poubelleclient", url = "https://download.data.grandlyon.com/ws/grandlyon")
 public interface TrashClient {
-    @RequestMapping(method = RequestMethod.GET, value ="/gin_nettoiement.gincorbeille/all.json?maxfeatures=100&start=101")
+    int maxFeatures=4500;
+    int start=2342;
+
+    @RequestMapping(method = RequestMethod.GET, value ="/gin_nettoiement.gincorbeille/all.json?maxfeatures="+maxFeatures+"&start="+start)
     GrandLyonAPIResponse getAllPoubelles();
 }
